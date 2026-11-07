@@ -10,11 +10,11 @@
 # ==========================================
 # Agentic & Local AI Tools (Antigravity & Tracing)
 # ==========================================
-.antigravity/
-antigravity/
-*.antigravity.log
-antigravity.db*
-antigravity_history/
+.agents/
+agents/
+*.agents.log
+agents.db*
+agents_history/
 
 # LangGraph / Tracing / Local DB
 *.sqlite
