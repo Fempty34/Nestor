@@ -1,0 +1,57 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "nestor"
+version = "0.1.0"
+description = "Multi-agent system converting STEM lecture videos into verified LaTeX and PDF notes"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.12, <3.14"
+authors = [
+    { name = "CodeBaka", email = "petrov.ve@phystech.edu" }
+]
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4",
+    "pytest-asyncio>=0.25.3",
+    "ruff>=0.9.7",
+]
+
+[tool.uv]
+cache-dir = ".uv/cache"
+default-groups = ["dev"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["src"]
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "N",      # pep8-naming
+    "UP",     # pyupgrade
+    "B",      # flake8-bugbear
+    "A",      # flake8-builtins
+    "C4",     # flake8-comprehensions
+    "T20",    # flake8-print
+    "SIM",    # flake8-simplify
+    "PTH",    # flake8-use-pathlib
+    "RET",    # flake8-return
+    "RUF",    # ruff-specific rules
+]
+ignore = [
+    "E501",   # line length errors
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
