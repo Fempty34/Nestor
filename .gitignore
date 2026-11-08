@@ -1,5 +1,5 @@
 # ==========================================
-# Environments & Secrets (Никогда не коммитить!)
+# Environments & Secrets
 # ==========================================
 .env
 .env*.local
@@ -37,7 +37,7 @@ venv/
 ENV/
 env/
 
-# Package managers & tools (uv, poetry, pip)
+# Package managers & tools
 .uv/
 dist/
 build/
@@ -49,6 +49,8 @@ build/
 htmlcov/
 .mypy_cache/
 .ruff_cache/
+.pytest
+.ruff
 
 # ==========================================
 # Frontend (Next.js / TypeScript / Node)
@@ -80,7 +82,6 @@ pnpm-debug.log*
 *.fdb_latexmk
 *.synctex.gz
 
-# Сырые медиафайлы лекций и временные аудио
 data/raw/
 data/audio/
 data/cache/
@@ -100,3 +101,8 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# ==========================================
+# CI & CD
+# ==========================================
+.githooks
