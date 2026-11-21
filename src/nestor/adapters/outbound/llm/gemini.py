@@ -1,6 +1,5 @@
 """Google Gemini outbound LLM adapter using the official google-genai SDK."""
 
-import os
 from collections.abc import Callable, Coroutine
 from typing import Any
 
@@ -14,6 +13,7 @@ from tenacity import (
     wait_random_exponential,
 )
 
+from nestor.core.config.llm import GeminiConfig
 from nestor.ports.llm import (
     LlmAuthenticationError,
     LlmError,
@@ -24,35 +24,31 @@ from nestor.ports.llm import (
     LlmTimeoutError,
 )
 
-DEFAULT_GEMINI_MODEL = "gemini-2.0-flash"
-
 
 class GeminiClient:
     """Production adapter for Google Gemini language models."""
 
     def __init__(
         self,
+        config: GeminiConfig | None = None,
         *,
-        api_key: str | None = None,
-        default_model: str = DEFAULT_GEMINI_MODEL,
-        max_retries: int = 3,
-        base_delay: float = 1.0,
-        max_delay: float = 30.0,
         client: genai.Client | None = None,
     ) -> None:
-        resolved_key = api_key or os.environ.get("GEMINI_API_KEY")
+        self.config = config or GeminiConfig()
+
+        resolved_key = self.config.raw_api_key
         if not resolved_key and client is None:
             msg = (
-                "Gemini API key not found. Provide api_key argument or set "
-                "the GEMINI_API_KEY environment variable."
+                "Gemini API key not found. Provide api_key via GeminiConfig "
+                "or set the GEMINI_API_KEY environment variable."
             )
             raise LlmAuthenticationError(msg)
 
         self._client = client or genai.Client(api_key=resolved_key)
-        self.default_model = default_model
-        self.max_retries = max_retries
-        self.base_delay = base_delay
-        self.max_delay = max_delay
+        self.default_model = self.config.default_model
+        self.max_retries = self.config.max_retries
+        self.base_delay = self.config.base_delay
+        self.max_delay = self.config.max_delay
 
     async def generate(
         self,
