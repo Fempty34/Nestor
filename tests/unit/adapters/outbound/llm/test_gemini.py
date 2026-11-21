@@ -4,9 +4,10 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from google.genai import errors, types
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, SecretStr
 
 from nestor.adapters.outbound.llm.gemini import GeminiClient
+from nestor.core.config.llm import GeminiConfig
 from nestor.ports.llm import (
     LlmAuthenticationError,
     LlmClient,
@@ -30,20 +31,33 @@ class TestGeminiClientInitialization:
 
     def test_protocol_conformance(self) -> None:
         """Verify GeminiClient satisfies the abstract LlmClient protocol."""
-        client = GeminiClient(api_key="dummy-key")
+        config = GeminiConfig(api_key=SecretStr("dummy-key"))
+        client = GeminiClient(config=config)
         assert isinstance(client, LlmClient)
 
     def test_missing_api_key_raises_auth_error(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """Verify LlmAuthenticationError is raised when no API key is provided or found."""
         monkeypatch.delenv("GEMINI_API_KEY", raising=False)
         with pytest.raises(LlmAuthenticationError, match="Gemini API key not found"):
-            GeminiClient(api_key=None)
+            GeminiClient(config=GeminiConfig(api_key=None))
 
     def test_reads_api_key_from_environment(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """Verify API key is picked up from GEMINI_API_KEY environment variable."""
         monkeypatch.setenv("GEMINI_API_KEY", "env-secret-key")
         client = GeminiClient()
         assert client.default_model == "gemini-2.0-flash"
+
+    def test_init_with_gemini_config_object(self) -> None:
+        """Verify client initializes properly when passing a typed GeminiConfig object."""
+        config = GeminiConfig(
+            api_key=SecretStr("typed-config-key"),
+            default_model="gemini-2.0-pro",
+            max_retries=5,
+        )
+        client = GeminiClient(config=config)
+        assert client.default_model == "gemini-2.0-pro"
+        assert client.max_retries == 5
+        assert client.config.raw_api_key == "typed-config-key"
 
 
 class TestGeminiClientGenerate:
@@ -62,7 +76,7 @@ class TestGeminiClientGenerate:
 
         mock_genai.aio.models.generate_content = AsyncMock(return_value=mock_response)
 
-        client = GeminiClient(api_key="test-key", client=mock_genai)
+        client = GeminiClient(client=mock_genai)
         result = await client.generate(
             prompt="Compute the limit of sin(x)/x",
             system_instruction="You are a calculus professor.",
@@ -105,7 +119,7 @@ class TestGeminiClientStructured:
 
         mock_genai.aio.models.generate_content = AsyncMock(return_value=mock_response)
 
-        client = GeminiClient(api_key="test-key", client=mock_genai)
+        client = GeminiClient(client=mock_genai)
         result = await client.generate_structured(
             prompt="Analyze inequality step",
             response_model=ProofStep,
@@ -135,7 +149,7 @@ class TestGeminiClientStructured:
 
         mock_genai.aio.models.generate_content = AsyncMock(return_value=mock_response)
 
-        client = GeminiClient(api_key="test-key", client=mock_genai)
+        client = GeminiClient(client=mock_genai)
         result = await client.generate_structured(
             prompt="Next step",
             response_model=ProofStep,
@@ -154,7 +168,7 @@ class TestGeminiClientStructured:
 
         mock_genai.aio.models.generate_content = AsyncMock(return_value=mock_response)
 
-        client = GeminiClient(api_key="test-key", client=mock_genai)
+        client = GeminiClient(client=mock_genai)
         with pytest.raises(LlmSchemaValidationError, match="Failed to parse Gemini output"):
             await client.generate_structured(
                 prompt="Extract",
@@ -180,13 +194,8 @@ class TestGeminiClientErrorHandlingAndRetries:
             side_effect=[rate_limit_err, success_response]
         )
 
-        client = GeminiClient(
-            api_key="test-key",
-            client=mock_genai,
-            max_retries=2,
-            base_delay=0.01,
-            max_delay=0.05,
-        )
+        config = GeminiConfig(max_retries=2, base_delay=0.01, max_delay=0.05)
+        client = GeminiClient(config=config, client=mock_genai)
 
         result = await client.generate("Test prompt")
         assert result.content == "Successful answer after rate limit retry"
@@ -200,13 +209,8 @@ class TestGeminiClientErrorHandlingAndRetries:
 
         mock_genai.aio.models.generate_content = AsyncMock(side_effect=rate_limit_err)
 
-        client = GeminiClient(
-            api_key="test-key",
-            client=mock_genai,
-            max_retries=2,
-            base_delay=0.01,
-            max_delay=0.05,
-        )
+        config = GeminiConfig(max_retries=2, base_delay=0.01, max_delay=0.05)
+        client = GeminiClient(config=config, client=mock_genai)
 
         with pytest.raises(LlmRateLimitError, match="Gemini rate limit exceeded"):
             await client.generate("Test prompt")
@@ -221,11 +225,8 @@ class TestGeminiClientErrorHandlingAndRetries:
 
         mock_genai.aio.models.generate_content = AsyncMock(side_effect=auth_err)
 
-        client = GeminiClient(
-            api_key="bad-key",
-            client=mock_genai,
-            max_retries=3,
-        )
+        config = GeminiConfig(max_retries=3)
+        client = GeminiClient(config=config, client=mock_genai)
 
         with pytest.raises(LlmAuthenticationError, match="Gemini authentication failed"):
             await client.generate("Test prompt")
@@ -240,13 +241,8 @@ class TestGeminiClientErrorHandlingAndRetries:
 
         mock_genai.aio.models.generate_content = AsyncMock(side_effect=timeout_err)
 
-        client = GeminiClient(
-            api_key="test-key",
-            client=mock_genai,
-            max_retries=2,
-            base_delay=0.01,
-            max_delay=0.05,
-        )
+        config = GeminiConfig(max_retries=2, base_delay=0.01, max_delay=0.05)
+        client = GeminiClient(config=config, client=mock_genai)
 
         with pytest.raises(LlmTimeoutError, match="Gemini client timeout"):
             await client.generate("Test prompt")
