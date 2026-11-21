@@ -57,7 +57,7 @@ class TestLlmPortContracts:
         assert resp.parsed is None
 
         with pytest.raises(Exception):  # noqa: B017
-            resp.content = "Modified text"  # type: ignore[misc]
+            setattr(resp, "content", "Modified text")  # noqa: B010
 
 
 class TestFakeLlmClientGenerate:

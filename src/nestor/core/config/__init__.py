@@ -1,5 +1,6 @@
 """Configuration module for Nestor."""
 
+from nestor.core.config.compiler import TectonicConfig
 from nestor.core.config.llm import (
     BaseLlmConfig,
     GeminiConfig,
@@ -12,4 +13,5 @@ __all__ = [
     "GeminiConfig",
     "LlmSettings",
     "OpenRouterConfig",
+    "TectonicConfig",
 ]

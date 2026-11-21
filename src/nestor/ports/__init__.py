@@ -1,5 +1,14 @@
 """Ports layer: formal typing.Protocol definitions for driving and driven adapters."""
 
+from nestor.ports.compiler import (
+    CompilationResult,
+    LatexError,
+    LatexErrorKind,
+    TexCompiler,
+    TexCompilerError,
+    TexNotFoundError,
+    TexTimeoutError,
+)
 from nestor.ports.llm import (
     LlmAuthenticationError,
     LlmClient,
@@ -12,6 +21,9 @@ from nestor.ports.llm import (
 )
 
 __all__ = [
+    "CompilationResult",
+    "LatexError",
+    "LatexErrorKind",
     "LlmAuthenticationError",
     "LlmClient",
     "LlmError",
@@ -20,4 +32,8 @@ __all__ = [
     "LlmResponse",
     "LlmSchemaValidationError",
     "LlmTimeoutError",
+    "TexCompiler",
+    "TexCompilerError",
+    "TexNotFoundError",
+    "TexTimeoutError",
 ]
