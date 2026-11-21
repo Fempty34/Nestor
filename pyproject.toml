@@ -8,7 +8,9 @@ requires-python = ">=3.12, <3.14"
 authors = [
     { name = "CodeBaka", email = "petrov.ve@phystech.edu" }
 ]
-dependencies = []
+dependencies = [
+    "pydantic>=2.10.0",
+]
 
 [build-system]
 requires = ["hatchling"]
