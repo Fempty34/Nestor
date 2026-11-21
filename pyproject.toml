@@ -9,7 +9,10 @@ authors = [
     { name = "CodeBaka", email = "petrov.ve@phystech.edu" }
 ]
 dependencies = [
+    "google-genai>=0.1.1",
+    "openai>=1.50.0",
     "pydantic>=2.10.0",
+    "tenacity>=9.0.0",
 ]
 
 [build-system]
