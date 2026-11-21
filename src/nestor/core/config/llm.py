@@ -42,12 +42,47 @@ class GeminiConfig(BaseLlmConfig):
             return self.api_key.get_secret_value()
         return os.environ.get("GEMINI_API_KEY")
 
+
+class OpenRouterConfig(BaseLlmConfig):
+    """Configuration for OpenRouter provider."""
+
+    api_key: SecretStr | None = Field(
+        default=None,
+        description="OpenRouter API key. If None, falls back to OPENROUTER_API_KEY environment variable.",
+    )
+    default_model: str = Field(
+        default="anthropic/claude-opus-5.5",
+        description="Default model identifier route on OpenRouter.",
+    )
+    base_url: str = Field(
+        default="https://openrouter.ai/api/v1",
+        description="Base URL for OpenRouter API.",
+    )
+    site_url: str | None = Field(
+        default=None,
+        description="Optional HTTP-Referer header for OpenRouter rankings.",
+    )
+    site_name: str = Field(
+        default="Nestor",
+        description="Optional X-Title header identifying the client application.",
+    )
+
+    @property
+    def raw_api_key(self) -> str | None:
+        """Resolve API key from explicit config or environment fallback."""
+        if self.api_key is not None:
+            return self.api_key.get_secret_value()
+        return os.environ.get("OPENROUTER_API_KEY")
+
+
 class LlmSettings(BaseModel):
     """Consolidated LLM configuration for the multi-agent system."""
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
     gemini: GeminiConfig = Field(default_factory=GeminiConfig)
+    openrouter: OpenRouterConfig = Field(default_factory=OpenRouterConfig)
+
     @classmethod
     def from_toml(cls, path: Path | str) -> Self:
         """Load settings from a TOML configuration file."""
