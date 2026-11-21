@@ -32,6 +32,7 @@ class TectonicCompiler:
     ) -> None:
         self.config = config or TectonicConfig()
         self._runner = runner or subprocess.run
+        self._executable_path: str | None = None
 
     def _validate_binary_availability(self) -> str:
         """Verify compiler binary exists and return resolved executable path."""
@@ -44,7 +45,8 @@ class TectonicCompiler:
                 "or specify an explicit path via TectonicConfig."
             )
             raise TexNotFoundError(msg)
-        return resolved or binary
+        self._executable_path = resolved or binary
+        return self._executable_path
 
     def _execute_compilation(
         self,
@@ -74,7 +76,7 @@ class TectonicCompiler:
                 asset_file.parent.mkdir(parents=True, exist_ok=True)
                 asset_file.write_bytes(content)
 
-        cmd: list[str] = [self.config.binary_path]
+        cmd: list[str] = [self._executable_path or self.config.binary_path]
         if self.config.untrusted:
             cmd.append("--untrusted")
         if self.config.keep_logs:
@@ -91,6 +93,7 @@ class TectonicCompiler:
             result = self._runner(
                 cmd,
                 cwd=str(temp_dir),
+                stdin=subprocess.DEVNULL,
                 capture_output=True,
                 text=True,
                 timeout=timeout,

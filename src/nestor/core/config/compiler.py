@@ -16,7 +16,7 @@ class TectonicConfig(BaseModel):
         description="Path or binary name for the Tectonic compiler executable.",
     )
     timeout: float = Field(
-        default=30.0,
+        default=60.0,
         gt=0.0,
         description="Maximum execution timeout in seconds per compilation run.",
     )
@@ -38,5 +38,5 @@ class TectonicConfig(BaseModel):
         """Create TectonicConfig loading overrides from environment variables."""
         binary_path = os.environ.get("TECTONIC_PATH", "tectonic")
         timeout_env = os.environ.get("TECTONIC_TIMEOUT")
-        timeout = float(timeout_env) if timeout_env else 30.0
+        timeout = float(timeout_env) if timeout_env else 60.0
         return cls(binary_path=binary_path, timeout=timeout)
