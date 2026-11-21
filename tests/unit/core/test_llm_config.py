@@ -39,8 +39,9 @@ class TestGeminiConfig:
 
     def test_extra_forbidden_fields(self) -> None:
         """Verify passing unrecognized fields raises ValidationError."""
+        invalid_kwargs: dict[str, str] = {"unexpected_param": "invalid"}
         with pytest.raises(ValidationError):
-            GeminiConfig(unexpected_param="invalid")  # type: ignore[call-arg]
+            GeminiConfig(**invalid_kwargs)
 
 
 class TestOpenRouterConfig:
@@ -68,8 +69,9 @@ class TestOpenRouterConfig:
 
     def test_extra_forbidden_fields(self) -> None:
         """Verify passing unrecognized fields raises ValidationError."""
+        invalid_kwargs: dict[str, str] = {"unknown_setting": "bad"}
         with pytest.raises(ValidationError):
-            OpenRouterConfig(unknown_setting="bad")  # type: ignore[call-arg]
+            OpenRouterConfig(**invalid_kwargs)
 
 
 class TestLlmSettingsLoaders:

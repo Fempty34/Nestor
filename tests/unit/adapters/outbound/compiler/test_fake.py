@@ -40,7 +40,7 @@ class TestTexCompilerPortContracts:
         assert res.success is True
         assert res.pdf_bytes == b"dummy-pdf"
         with pytest.raises(Exception):  # noqa: B017
-            res.success = False  # type: ignore[misc]
+            setattr(res, "success", False)  # noqa: B010
 
 
 class TestFakeTexCompilerCompilation:
@@ -133,6 +133,5 @@ class TestFakeTexCompilerCompilation:
         assert compiler.last_call is None
         assert compiler.calls == []
 
-        # After reset, queue is cleared, default response is returned
         res = await compiler.compile("second")
         assert res.success is True
