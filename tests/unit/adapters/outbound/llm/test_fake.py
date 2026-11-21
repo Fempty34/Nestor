@@ -119,7 +119,7 @@ class TestFakeLlmClientGenerate:
 
         assert r1.content == "First response"
         assert r2.content == "Second response"
-        assert r3.content == "Mocked LLM completion"  # falls back to default
+        assert r3.content == "Mocked LLM completion"
 
     @pytest.mark.asyncio
     async def test_generate_serializes_pydantic_model_in_queue(self) -> None:
@@ -207,7 +207,6 @@ class TestFakeLlmClientStructured:
     @pytest.mark.asyncio
     async def test_generate_structured_raises_on_schema_mismatch(self) -> None:
         """Verify LlmSchemaValidationError is raised when JSON violates Pydantic constraints."""
-        # formula_count is negative, violating ge=0
         invalid_schema_json = '{"summary": "Test", "formula_count": -5}'
         client = FakeLlmClient(responses=[invalid_schema_json])
 
