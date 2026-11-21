@@ -29,7 +29,7 @@ class FakeLlmClient:
     def __init__(
         self,
         *,
-        default_response: str = "Mocked LLM completion",
+        default_response: str | BaseModel = "Mocked LLM completion",
         responses: list[str | BaseModel | LlmResponse[Any]] | None = None,
         prompt_mappings: dict[str, str | BaseModel | LlmResponse[Any]] | None = None,
         error_to_raise: Exception | None = None,
