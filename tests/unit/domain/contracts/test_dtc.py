@@ -65,7 +65,7 @@ class TestTimeRange:
         """Verify that TimeRange instances are frozen against mutation."""
         tr = TimeRange(start=0.0, end=10.0)
         with pytest.raises(ValidationError, match="Instance is frozen"):
-            tr.start = 5.0  # type: ignore[misc]
+            tr.start = 5.0  # type: ignore
 
     def test_extra_fields_forbidden(self) -> None:
         """Verify that extra unexpected attributes are rejected."""
@@ -111,7 +111,7 @@ class TestDTCBlockMetadata:
         """Verify immutability and strict schema conformance."""
         meta = DTCBlockMetadata(confidence=0.5)
         with pytest.raises(ValidationError, match="Instance is frozen"):
-            meta.confidence = 0.9  # type: ignore[misc]
+            meta.confidence = 0.9  # type: ignore
         with pytest.raises(ValidationError, match="Extra inputs are not permitted"):
             DTCBlockMetadata.model_validate({"confidence": 0.5, "extra": "forbidden"})
 
@@ -203,7 +203,7 @@ class TestDTCBlock:
             metadata=default_metadata,
         )
         with pytest.raises(ValidationError, match="Instance is frozen"):
-            block.board_content = "Modified text"  # type: ignore[misc]
+            block.board_content = "Modified text"  # type: ignore
 
 
 class TestCourseMetadata:

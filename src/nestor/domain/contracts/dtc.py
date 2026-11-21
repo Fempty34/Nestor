@@ -6,7 +6,7 @@ including time-coded blocks, visual and speech streams, and lecture metadata.
 
 from datetime import date
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -26,7 +26,7 @@ class TimeRange(BaseModel):
     ]
 
     @model_validator(mode="after")
-    def validate_chronology(self) -> "TimeRange":
+    def validate_chronology(self) -> Self:
         if self.start >= self.end:
             msg = f"start ({self.start}s) must be strictly less than end ({self.end}s)"
             raise ValueError(msg)
@@ -66,17 +66,15 @@ class DTCBlockMetadata(BaseModel):
     frame_snapshot_path: Annotated[
         Path | None,
         Field(
-            default=None,
             description="Optional path to the keyframe image (e.g. captured on low confidence).",
         ),
-    ]
+    ] = None
     has_formula: Annotated[
         bool,
         Field(
-            default=False,
             description="Flag indicating detection of mathematical formulas in visual stream.",
         ),
-    ]
+    ] = False
 
 
 class DTCBlock(BaseModel):
@@ -95,24 +93,22 @@ class DTCBlock(BaseModel):
     board_content: Annotated[
         str,
         Field(
-            default="",
             description="Raw text extracted from the whiteboard.",
         ),
-    ]
+    ] = ""
     lector_speech: Annotated[
         str,
         Field(
-            default="",
             description="Speech transcript corresponding to this temporal window.",
         ),
-    ]
+    ] = ""
     metadata: Annotated[
         DTCBlockMetadata,
         Field(description="Extraction metrics."),
     ]
 
     @model_validator(mode="after")
-    def validate_content_presence(self) -> "DTCBlock":
+    def validate_content_presence(self) -> Self:
         """Ensure the block is not empty."""
         if not self.board_content.strip() and not self.lector_speech.strip():
             msg = f"Block index {self.index} must contain either board content or speech."
@@ -129,24 +125,24 @@ class CourseMetadata(BaseModel):
     course_title: Annotated[str, Field(min_length=1, description="Human-readable course title.")]
     lecture_number: Annotated[
         int | None,
-        Field(default=None, ge=1, description="Sequential lecture number in the course."),
-    ]
+        Field(ge=1, description="Sequential lecture number in the course."),
+    ] = None
     lecture_title: Annotated[
         str | None,
-        Field(default=None, description="Specific topic or title of this lecture."),
-    ]
+        Field(description="Specific topic or title of this lecture."),
+    ] = None
     lecturer: Annotated[
         str | None,
-        Field(default=None, description="Academic lecturer name."),
-    ]
+        Field(description="Academic lecturer name."),
+    ] = None
     recorded_date: Annotated[
         date | None,
-        Field(default=None, description="Original recording date."),
-    ]
+        Field(description="Original recording date."),
+    ] = None
     language: Annotated[
         str,
-        Field(default="ru", description="ISO 639-1 language code (e.g. 'ru', 'en')."),
-    ]
+        Field(description="ISO 639-1 language code (e.g. 'ru', 'en')."),
+    ] = "ru"
 
 
 class LectureDTC(BaseModel):
@@ -164,7 +160,7 @@ class LectureDTC(BaseModel):
     ]
 
     @model_validator(mode="after")
-    def validate_sequence_integrity(self) -> "LectureDTC":
+    def validate_sequence_integrity(self) -> Self:
         """Enforce strict temporal monotonicity block indices."""
         for i in range(1, len(self.blocks)):
             prev_block = self.blocks[i - 1]
