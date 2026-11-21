@@ -34,7 +34,19 @@ class LlmSchemaValidationError(LlmError):
 
 
 class LlmProviderError(LlmError):
-    """Raised when an upstream LLM provider fails (network, rate limit, quota)."""
+    """Raised when an upstream LLM provider fails."""
+
+
+class LlmRateLimitError(LlmProviderError):
+    """Raised when an LLM provider rejects a request due to rate limits or quota exhaustion."""
+
+
+class LlmTimeoutError(LlmProviderError):
+    """Raised when an LLM provider request times out."""
+
+
+class LlmAuthenticationError(LlmProviderError):
+    """Raised when authentication or authorization fails with the LLM provider."""
 
 
 @runtime_checkable
