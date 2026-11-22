@@ -30,6 +30,18 @@ from nestor.ports.llm import (
     LlmSchemaValidationError,
     LlmTimeoutError,
 )
+from nestor.ports.video import (
+    NoVideoStreamError,
+    VideoBatch,
+    VideoExecutionError,
+    VideoFrame,
+    VideoNotFoundError,
+    VideoProcessingResult,
+    VideoProcessor,
+    VideoProcessorError,
+    VideoTimeoutError,
+    VideoToolNotFoundError,
+)
 
 __all__ = [
     "AudioExecutionError",
@@ -52,8 +64,18 @@ __all__ = [
     "LlmSchemaValidationError",
     "LlmTimeoutError",
     "NoAudioStreamError",
+    "NoVideoStreamError",
     "TexCompiler",
     "TexCompilerError",
     "TexNotFoundError",
     "TexTimeoutError",
+    "VideoBatch",
+    "VideoExecutionError",
+    "VideoFrame",
+    "VideoNotFoundError",
+    "VideoProcessingResult",
+    "VideoProcessor",
+    "VideoProcessorError",
+    "VideoTimeoutError",
+    "VideoToolNotFoundError",
 ]

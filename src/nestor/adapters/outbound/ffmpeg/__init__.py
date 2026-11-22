@@ -11,6 +11,16 @@ from nestor.adapters.outbound.ffmpeg.fake import (
     AudioCallRecord,
     FakeAudioProcessor,
 )
+from nestor.adapters.outbound.ffmpeg.fake_video import (
+    FakeVideoProcessor,
+    VideoCallRecord,
+)
+from nestor.adapters.outbound.ffmpeg.video_adapter import (
+    FFmpegVideoExecutionError,
+    FFmpegVideoNotFoundError,
+    FFmpegVideoProcessor,
+    FFmpegVideoTimeoutError,
+)
 
 __all__ = [
     "AsyncSubprocessRunner",
@@ -19,5 +29,11 @@ __all__ = [
     "FFmpegExecutionError",
     "FFmpegNotFoundError",
     "FFmpegTimeoutError",
+    "FFmpegVideoExecutionError",
+    "FFmpegVideoNotFoundError",
+    "FFmpegVideoProcessor",
+    "FFmpegVideoTimeoutError",
     "FakeAudioProcessor",
+    "FakeVideoProcessor",
+    "VideoCallRecord",
 ]
