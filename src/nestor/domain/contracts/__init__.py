@@ -4,6 +4,8 @@ from nestor.domain.contracts.dtc import (
     CourseMetadata,
     DTCBlock,
     DTCBlockMetadata,
+    DTCLecture,
+    DTCSequence,
     LectureDTC,
     TimeRange,
 )
@@ -12,6 +14,8 @@ __all__ = [
     "CourseMetadata",
     "DTCBlock",
     "DTCBlockMetadata",
+    "DTCLecture",
+    "DTCSequence",
     "LectureDTC",
     "TimeRange",
 ]

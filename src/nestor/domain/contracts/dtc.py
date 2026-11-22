@@ -182,3 +182,7 @@ class LectureDTC(BaseModel):
                 raise ValueError(msg)
 
         return self
+
+
+type DTCLecture = LectureDTC
+type DTCSequence = LectureDTC
