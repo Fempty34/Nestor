@@ -76,19 +76,19 @@ class TestAudioSegment:
     def test_extra_fields_forbidden(self, tmp_path: Path) -> None:
         """Verify unexpected attributes or explicit duration field are rejected."""
         with pytest.raises(ValidationError):
-            AudioSegment(  # type: ignore[call-arg]
+            AudioSegment(
                 index=0,
                 path=tmp_path / "test.wav",
                 time_range=TimeRange(start=0.0, end=10.0),
-                unexpected_field="disallowed",
+                unexpected_field="disallowed",  # pyright: ignore[reportCallIssue]
             )
 
         with pytest.raises(ValidationError):
-            AudioSegment(  # type: ignore[call-arg]
+            AudioSegment(
                 index=0,
                 path=tmp_path / "test.wav",
                 time_range=TimeRange(start=0.0, end=10.0),
-                duration=10.0,
+                duration=10.0,  # pyright: ignore[reportCallIssue]
             )
 
     def test_negative_index_rejected(self, tmp_path: Path) -> None:

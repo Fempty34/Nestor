@@ -1,6 +1,7 @@
 """Unit tests for LLM configuration schemas and loaders."""
 
 from pathlib import Path
+from typing import Any
 
 import pytest
 from pydantic import SecretStr, ValidationError
@@ -39,7 +40,7 @@ class TestGeminiConfig:
 
     def test_extra_forbidden_fields(self) -> None:
         """Verify passing unrecognized fields raises ValidationError."""
-        invalid_kwargs: dict[str, str] = {"unexpected_param": "invalid"}
+        invalid_kwargs: dict[str, Any] = {"unexpected_param": "invalid"}
         with pytest.raises(ValidationError):
             GeminiConfig(**invalid_kwargs)
 
@@ -69,7 +70,7 @@ class TestOpenRouterConfig:
 
     def test_extra_forbidden_fields(self) -> None:
         """Verify passing unrecognized fields raises ValidationError."""
-        invalid_kwargs: dict[str, str] = {"unknown_setting": "bad"}
+        invalid_kwargs: dict[str, Any] = {"unknown_setting": "bad"}
         with pytest.raises(ValidationError):
             OpenRouterConfig(**invalid_kwargs)
 

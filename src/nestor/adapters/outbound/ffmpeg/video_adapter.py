@@ -34,6 +34,15 @@ class FFmpegVideoTimeoutError(VideoTimeoutError):
     """Raised when FFmpeg video extraction exceeds the configured execution deadline."""
 
 
+def _format_master_timestamp(seconds: float) -> str:
+    """Format total seconds into exact master timestamp HH:MM:SS."""
+    total_sec = int(seconds)
+    hours = total_sec // 3600
+    minutes = (total_sec % 3600) // 60
+    secs = total_sec % 60
+    return f"{hours:02d}:{minutes:02d}:{secs:02d}"
+
+
 class FFmpegVideoProcessor:
     """Outbound adapter for sampling video frames and grouping them into temporal batches."""
 
@@ -166,15 +175,16 @@ class FFmpegVideoProcessor:
         frame_interval = round(1.0 / fps, 6)
 
         # Group extracted files by batch index: batch_idx = int(timestamp // batch_duration)
-        batches_map: dict[int, list[tuple[int, Path, float]]] = {}
+        batches_map: dict[int, list[tuple[int, Path, float, str]]] = {}
 
         for global_idx, file_path in enumerate(extracted_files):
             timestamp = round(global_idx * frame_interval, 3)
+            formatted_ts = _format_master_timestamp(timestamp)
             batch_idx = int(timestamp // batch_duration)
 
             if batch_idx not in batches_map:
                 batches_map[batch_idx] = []
-            batches_map[batch_idx].append((global_idx, file_path, timestamp))
+            batches_map[batch_idx].append((global_idx, file_path, timestamp, formatted_ts))
 
         batches: list[VideoBatch] = []
 
@@ -184,7 +194,7 @@ class FFmpegVideoProcessor:
             batch_dir.mkdir(parents=True, exist_ok=True)
 
             batch_frames: list[VideoFrame] = []
-            for g_idx, src_path, ts in items:
+            for g_idx, src_path, ts, _formatted_ts in items:
                 dest_path = batch_dir / src_path.name
                 shutil.move(str(src_path), str(dest_path))
 

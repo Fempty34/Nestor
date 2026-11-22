@@ -8,12 +8,14 @@ from nestor.core.config.llm import (
     LlmSettings,
     OpenRouterConfig,
 )
+from nestor.core.config.multimodal import GeminiPreprocessConfig
 from nestor.core.config.video import VideoConfig
 
 __all__ = [
     "BaseLlmConfig",
     "FFmpegConfig",
     "GeminiConfig",
+    "GeminiPreprocessConfig",
     "LlmSettings",
     "OpenRouterConfig",
     "TectonicConfig",

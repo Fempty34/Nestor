@@ -30,6 +30,14 @@ from nestor.ports.llm import (
     LlmSchemaValidationError,
     LlmTimeoutError,
 )
+from nestor.ports.multimodal import (
+    MultimodalBatchExtractor,
+    MultimodalExtractionError,
+    MultimodalExtractionParseError,
+    MultimodalFileFailedError,
+    MultimodalProcessingTimeoutError,
+    MultimodalUploadError,
+)
 from nestor.ports.video import (
     NoVideoStreamError,
     VideoBatch,
@@ -63,6 +71,12 @@ __all__ = [
     "LlmResponse",
     "LlmSchemaValidationError",
     "LlmTimeoutError",
+    "MultimodalBatchExtractor",
+    "MultimodalExtractionError",
+    "MultimodalExtractionParseError",
+    "MultimodalFileFailedError",
+    "MultimodalProcessingTimeoutError",
+    "MultimodalUploadError",
     "NoAudioStreamError",
     "NoVideoStreamError",
     "TexCompiler",
