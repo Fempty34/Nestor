@@ -10,6 +10,7 @@ authors = [
 ]
 dependencies = [
     "google-genai>=0.1.1",
+    "langgraph>=1.2.24",
     "openai>=1.50.0",
     "pydantic>=2.10.0",
     "tenacity>=9.0.0",

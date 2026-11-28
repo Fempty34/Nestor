@@ -1,5 +1,25 @@
 """Pipeline: orchestrates multi-agent LangGraph execution contours."""
 
+from nestor.pipeline.conspect import (
+    CHECKPOINT_ALLOWED_TYPES,
+    DEFAULT_MAX_DRAFT_ATTEMPTS,
+    DEFAULT_MAX_PATCH_ATTEMPTS,
+    NODE_COMPILER,
+    NODE_CRITIC,
+    NODE_DRAFTING,
+    NODE_PATCHING,
+    ConspectNode,
+    ConspectState,
+    ConspectStatus,
+    CritiqueIssue,
+    CritiqueReport,
+    CritiqueSeverity,
+    build_conspect_graph,
+    create_initial_conspect_state,
+    create_memory_checkpointer,
+    route_after_compiler,
+    route_after_critic,
+)
 from nestor.pipeline.preprocessing import (
     DTCLecture,
     DTCSequence,
@@ -10,10 +30,28 @@ from nestor.pipeline.preprocessing import (
 )
 
 __all__ = [
+    "CHECKPOINT_ALLOWED_TYPES",
+    "DEFAULT_MAX_DRAFT_ATTEMPTS",
+    "DEFAULT_MAX_PATCH_ATTEMPTS",
+    "NODE_COMPILER",
+    "NODE_CRITIC",
+    "NODE_DRAFTING",
+    "NODE_PATCHING",
+    "ConspectNode",
+    "ConspectState",
+    "ConspectStatus",
+    "CritiqueIssue",
+    "CritiqueReport",
+    "CritiqueSeverity",
     "DTCLecture",
     "DTCSequence",
     "LecturePreprocessor",
     "PreprocessingResult",
     "PreprocessingTelemetry",
+    "build_conspect_graph",
+    "create_initial_conspect_state",
+    "create_memory_checkpointer",
     "process_lecture",
+    "route_after_compiler",
+    "route_after_critic",
 ]
